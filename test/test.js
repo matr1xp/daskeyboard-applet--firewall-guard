@@ -97,43 +97,53 @@ describe('#isPortRangeInputValid', () => {
   });
 });
 
-describe('#run', () => {
-  it('should blink red if guarding closed port and actually opened', async function () {
-    const config = {
-      applet: {
-        user: {
-          host: 'localhost',
-          portRange: '27301-27302', // Das Keyboard Q app opens this 2 ports
-          portStatus: 'closed'
-        }
-      }
-    }
-    return buildAppWithConfig(config).then(app => {
-      return app.run().then(signal => {
-        assert.equal(signal.points[0][0].color, '#FF0000');
-        assert.equal(signal.points[0][0].effect, q.Effects.BLINK);
-      });
-    });
+describe('#FirewallGuard', () => {
+  it('should poll every 20 min', () => {
+    const app = new t.FirewallGuard();
+    assert.equal(app.pollingInterval, 1000 * 60 * 20);
   });
 
-  it('should set green color if guarding opened port and actually opened', async function () {
-    const config = {
-      applet: {
-        user: {
-          host: 'localhost',
-          portRange: '27301-27302', // Das Keyboard Q app opens this 2 ports
-          portStatus: 'opened'
+  describe('#run', () => {
+    it('should blink red if guarding closed port and actually opened', async function () {
+      const config = {
+        applet: {
+          user: {
+            host: 'localhost',
+            portRange: '27301-27302', // Das Keyboard Q app opens this 2 ports
+            portStatus: 'closed'
+          }
         }
       }
-    }
-    return buildAppWithConfig(config).then(app => {
-      return app.run().then(signal => {
-        assert.equal(signal.points[0][0].color, '#00FF00');
-        assert.equal(signal.points[0][0].effect, q.Effects.SET_COLOR);
+      return buildAppWithConfig(config).then(app => {
+        return app.run().then(signal => {
+          assert.equal(signal.points[0][0].color, '#FF0000');
+          assert.equal(signal.points[0][0].effect, q.Effects.BLINK);
+        });
+      });
+    });
+  
+    it('should set green color if guarding opened port and actually opened', async function () {
+      const config = {
+        applet: {
+          user: {
+            host: 'localhost',
+            portRange: '27301-27302', // Das Keyboard Q app opens this 2 ports
+            portStatus: 'opened'
+          }
+        }
+      }
+      return buildAppWithConfig(config).then(app => {
+        return app.run().then(signal => {
+          assert.equal(signal.points[0][0].color, '#00FF00');
+          assert.equal(signal.points[0][0].effect, q.Effects.SET_COLOR);
+        });
       });
     });
   });
-})
+});
+
+
+
 
 /**
  * Builds the app with the config given in param

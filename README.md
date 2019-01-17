@@ -1,10 +1,11 @@
-# Q Applet: Firewall guard
+# Q Applet: Firewall Guard
 
-This applet guards a firewall by notifying on a Das Keyboard Q series if some port in a port range 
-are not at the expected status UP or DOWN.
+This applet monitors firewall and server ports. It notifies users of port availability changes.
 
-The key will blink in RED if one of the ports does not have the correct status.
-The key will stay green if every port of the range has the right status.
+- <span style="color:red">Red</span>: alarm - port does not satisfy condition
+
+- <span style="color:green">Green</span>: firewall up and running
+
 [GitHub repository](https://github.com/daskeyboard/daskeyboard-applet--firewall-guard)
 
 ![Wrong status on a port](assets/image.png "Wrong status on a port")
@@ -30,7 +31,7 @@ Pull requests welcome.
 
 ## Copyright / License
 
-Copyright 2014 - 2018 Das Keyboard / Metadot Corp.
+Copyright 2014 - 2019 Das Keyboard / Metadot Corp.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.

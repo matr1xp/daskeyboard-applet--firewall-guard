@@ -58,7 +58,7 @@
         "help": "if not, notify me.",
         "required": true,
         "order": 2,
-        "value": "up",
+        "value": "closed",
         "controlType": "dropdown",
         "options": [
           {
