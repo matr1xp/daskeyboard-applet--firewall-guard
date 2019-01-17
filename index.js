@@ -1,6 +1,6 @@
 
 const q = require('daskeyboard-applet');
- const net = require('net');
+const net = require('net');
 const { forkJoin, Observable } = require('rxjs');
 const logger = q.logger;
 
@@ -164,6 +164,7 @@ class FirewallGuard extends q.DesktopApp {
     let firstWrongPort;
     // message if error
     let messageIfError;
+    let message = '';
     switch (this.config.portStatus) {
       case PORT_STATUS.OPENED:
         logger.info(`All ports should be up`);
@@ -186,10 +187,8 @@ class FirewallGuard extends q.DesktopApp {
     }
 
     if (!areAllPortsOk) {
-      const message = `${this.hostToMonitor}:${this.portsToMonitor[0]}-`
-        + `${this.portsToMonitor[this.portsToMonitor.length - 1]}`
-        + ` ${this.config.portStatus}`;
-
+      message = `${this.hostToMonitor}:${firstWrongPort.portNumber}`
+        + ` error ${messageIfError}`;
       logger.info(`Some ports are in the wrong state.` +
         `First wrong port ${JSON.stringify(firstWrongPort)}`)
       return new q.Signal({
@@ -199,8 +198,8 @@ class FirewallGuard extends q.DesktopApp {
         isMuted: false
       });
     } else {
-      const message = `${this.hostToMonitor}:${firstWrongPort.portNumber}`
-        + ` error ${messageIfError}`;
+      message = `${this.hostToMonitor}:${this.portRangeToString()}`
+        + ` ${this.config.portStatus}`;
       logger.info(`All port in range are in good state`);
       return new q.Signal({
         points: [[new q.Point('#00FF00')]],
@@ -208,6 +207,16 @@ class FirewallGuard extends q.DesktopApp {
         message: message
       });
     }
+  }
+
+  /**
+   * Return only the first port P1 if only one port entered
+   * Will return P1-PN if a Range is defined by the user
+   */
+  portRangeToString() {
+    const ports = this.config.portRange.split('-');
+    return ports.length === 1 ? `${ports[0]}` : `${ports[0]}-`
+      + `${ports[1]}`
   }
 
   /**

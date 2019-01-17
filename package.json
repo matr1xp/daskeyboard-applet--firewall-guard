@@ -62,11 +62,11 @@
         "controlType": "dropdown",
         "options": [
           {
-            "key": "up",
+            "key": "opened",
             "value": "opened"
           },
           {
-            "key": "down",
+            "key": "closed",
             "value": "closed"
           }
         ]
