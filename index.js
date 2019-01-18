@@ -194,8 +194,7 @@ class FirewallGuard extends q.DesktopApp {
       return new q.Signal({
         points: [[new q.Point('#FF0000', q.Effects.BLINK)]],
         name: 'Firewall Guard',
-        message: message,
-        isMuted: false
+        message: message
       });
     } else {
       message = `${this.hostToMonitor}:${this.portRangeToString()}`
