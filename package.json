@@ -1,7 +1,7 @@
 {
   "name": "daskeyboard-applet--firewall-guard",
   "displayName": "Firewall Guard",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Notifies when firewall and server port availability changes.",
   "longDescription": "TBD",
   "officialProductName": "Firewall Guard",

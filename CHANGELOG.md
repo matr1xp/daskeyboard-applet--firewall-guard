@@ -1,5 +1,11 @@
 #### 1.0.1 (2019-01-18)
 
+##### Bug Fixes
+
+*  upgraded daskeyboard applet version. This version fixes the applet state after a FLASH command (0a1a214e)
+
+#### 1.0.1 (2019-01-18)
+
 ##### New Features
 
 * **Signal notification:**  Applet will not light the q-button when sending a new signal (edccfc25)
