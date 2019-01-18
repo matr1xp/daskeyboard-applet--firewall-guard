@@ -27,7 +27,7 @@
     "das-keyboard-q": "3.0.0"
   },
   "dependencies": {
-    "daskeyboard-applet": "^2.11.1",
+    "daskeyboard-applet": "^2.11.3",
     "rxjs": "^6.3.3"
   },
   "qConfig": {
