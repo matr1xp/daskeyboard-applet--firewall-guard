@@ -111,7 +111,7 @@ function isPortRangeInputValid(firstPort, secondPort, errors) {
     return false;
   }
 
-  if (secondPort && secondPort < firstPort) {
+  if (secondPort && +secondPort < +firstPort) {
     errors.push(`Error validating ports ${firstPort} is greater than ${secondPort}`);
     return false;
   }
