@@ -48,8 +48,16 @@
         "key": "portRange",
         "label": "Port number or a range of ports",
         "help": "Example: 80 or 80-90",
-        "required": true,
+        "required": false,
         "order": 2,
+        "controlType": "textbox"
+      },
+      {
+        "key": "csvPorts",
+        "label": "Comma separated list of ports",
+        "help": "Example: 80, 443",
+        "required": false,
+        "order": 3,
         "controlType": "textbox"
       },
       {
@@ -57,7 +65,7 @@
         "label": "Ensure ports are:",
         "help": "if not, notify me.",
         "required": true,
-        "order": 2,
+        "order": 4,
         "value": "closed",
         "controlType": "dropdown",
         "options": [

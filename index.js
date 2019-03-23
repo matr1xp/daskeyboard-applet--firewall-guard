@@ -237,7 +237,7 @@ class FirewallGuard extends q.DesktopApp {
    * Called when user change the input questions defined in the package.json
    */
   async applyConfig() {
-    if (!this.config.host || !this.config.portRange || !this.config.portStatus) {
+    if (!this.config.host || !this.config.portStatus) {
       return;
     }
 
@@ -247,35 +247,62 @@ class FirewallGuard extends q.DesktopApp {
     }
 
     /* process the port*/
-    let ports = this.config.portRange.split('-');
-    // extract the first and second 
-    let firstPort = ports[0];
-    let secondPort = ports[1];
+    if (this.config.portRange) {
+      let ports = this.config.portRange.split('-');
+      // extract the first and second 
+      let firstPort = ports[0];
+      let secondPort = ports[1];
 
-    /* Throw an error if the portRange is not valid */
-    const errorMessage = [];
-    if (!isPortRangeInputValid(firstPort, secondPort, errorMessage)) {
-      throw new Error(errorMessage.join(','));
-    }
-
-    // convert ports to numbers
-    firstPort = +firstPort;
-    secondPort = +secondPort;
-
-    /** If a second port is defined, the array of monitors is a range between the first
-     * port to the second port. Otherwise it's just the first port
-     */
-    if (secondPort) {
-      const length = secondPort - firstPort + 1;
-      const range = new Array(length);
-      for (let i = 0; i < length; i++) {
-        range[i] = firstPort + i;
+      /* Throw an error if the portRange is not valid */
+      const errorMessage = [];
+      if (!isPortRangeInputValid(firstPort, secondPort, errorMessage)) {
+        throw new Error(errorMessage.join(','));
       }
-      this.portsToMonitor = range;
-    } else {
-      this.portsToMonitor = [];
-      this.portsToMonitor.push(firstPort);
+
+      // convert ports to numbers
+      firstPort = +firstPort;
+      secondPort = +secondPort;
+
+      /** If a second port is defined, the array of monitors is a range between the first
+       * port to the second port. Otherwise it's just the first port
+       */
+      if (secondPort) {
+        const length = secondPort - firstPort + 1;
+        const range = new Array(length);
+        for (let i = 0; i < length; i++) {
+          range[i] = firstPort + i;
+        }
+        this.portsToMonitor = range;
+      } else {
+        this.portsToMonitor = [];
+        this.portsToMonitor.push(firstPort);
+      }
     }
+
+    /** Comma separated list of ports
+     * Note: Port range is made optional so we check
+     * initialization or portsToMonitor
+    */
+    if (this.config.csvPorts) {
+      let ports = this.config.csvPorts.split(', ');
+      if (!this.portsToMonitor) {
+        this.portsToMonitor = [];
+      }
+      ports.forEach(port => {
+        this.portsToMonitor.push(port);
+      });
+    }
+
+    if (this.portsToMonitor) {
+      this.portsToMonitor = this.uniq(this.portsToMonitor);
+    }
+  }
+
+  /** Sort and return unique elements in array */
+  uniq(a) {
+    return a.sort().filter(function(item, pos, ary) {
+        return !pos || item != ary[pos - 1];
+    })
   }
 }
 
