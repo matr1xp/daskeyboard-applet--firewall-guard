@@ -162,33 +162,48 @@ class FirewallGuard extends q.DesktopApp {
     let areAllPortsOk = false;
     // will store the first wrong port
     let firstWrongPort;
+    // will store all wrong ports
+    let allWrongPorts;
     // message if error
     let messageIfError;
     let message = '';
     switch (this.config.portStatus) {
       case PORT_STATUS.OPENED:
+        this.portStatus = 'CLOSE';
         logger.info(`All ports should be up`);
         // evey ports should have status UP
         areAllPortsOk = portStates.every(ps => ps.status === PORT_STATUS.OPENED);
         if (!areAllPortsOk) {
           firstWrongPort = portStates.find(ps => ps.status !== PORT_STATUS.OPENED);
+          allWrongPorts = portStates.filter(ps => ps.status !== PORT_STATUS.OPENED);
           messageIfError = `closed (should be opened)`;
         }
         break;
       case PORT_STATUS.CLOSED:
+        this.portStatus = 'OPEN';
         logger.info(`All ports should be down`);
         // all ports should have status DOWN
         areAllPortsOk = portStates.every(ps => ps.status === PORT_STATUS.CLOSED);
         if (!areAllPortsOk) {
           firstWrongPort = portStates.find(ps => ps.status !== PORT_STATUS.CLOSED);
+          allWrongPorts = portStates.filter(ps => ps.status !== PORT_STATUS.CLOSED);
           messageIfError = `opened (should be closed)`;
         }
         break;
     }
 
     if (!areAllPortsOk) {
-      message = `${this.hostToMonitor}:${firstWrongPort.portNumber}`
-        + ` error ${messageIfError}`;
+      if (allWrongPorts.length > 1) {
+        message =  `${this.hostToMonitor} has ${allWrongPorts.length} ${this.portStatus} ports!<br/>`;
+        let tmp = '';
+        allWrongPorts.forEach(port => {
+          tmp += `${port.portNumber}<br/>`;
+        });
+        message += `${tmp}${messageIfError}`;
+      } else {
+        message = `${this.hostToMonitor}:${firstWrongPort.portNumber}`
+          + ` error ${messageIfError}`;
+      }
       logger.info(`Some ports are in the wrong state.` +
         `First wrong port ${JSON.stringify(firstWrongPort)}`)
       return new q.Signal({
